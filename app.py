@@ -56,9 +56,12 @@ if uploaded_file:
         # Schedule file for deletion
         st.session_state["uploaded_file_path"] = file_path
 
+# Clean up function for deleting file after session ends
 def cleanup_file():
     file_path = st.session_state.get("uploaded_file_path")
     if file_path and os.path.exists(file_path):
         os.remove(file_path)
 
-st.on_session_expired(cleanup_file)
+# Call cleanup function on session end
+if 'uploaded_file_path' in st.session_state:
+    st.on_session_close(cleanup_file)
