@@ -5,8 +5,12 @@ from data_preprocessing import preprocess_data
 from data_analysis import analyze_data
 from visualization import visualize_data
 from ai_training import train_ai_agent
-from logging_notification import logging_notification
+from logging_notification import send_upload_log, send_training_log
 import os
+
+# Make sure temp_files directory exists
+if not os.path.exists("temp_files"):
+    os.makedirs("temp_files")
 
 st.title("Document Analysis and Visualization Application")
 
