@@ -9,6 +9,9 @@ from logging_notification import send_upload_log, send_training_log
 import os
 import time
 
+# Hide Streamlit's default header and footer
+st.set_page_config(page_title="Document Analysis and Visualization", page_icon="📊")
+
 st.title("Document Analysis and Visualization Application")
 
 uploaded_file = st.file_uploader("Upload your .xls or .csv file", type=["xls", "csv"])
@@ -35,15 +38,15 @@ if uploaded_file:
         # Visualize data
         visualize_data(data)
         
-        # AI Training
-        st.write("Training AI Agent...")
-        train_ai_agent(data, log=True)
+        # Hide the training message while still training the AI
+        with st.spinner("Training AI agent..."):
+            train_ai_agent(data, log=True)
         
-        # Send training log to Telegram
+        # Send training log to Telegram without showing the training on the dashboard
         send_training_log(uploaded_file.name, status="completed")
         
         # Logging and notification for upload details
-        send_upload_log(uploaded_file.name, uploaded_file.type, st.request.remote_ip, st.request.headers.get('user-agent'))
+        send_upload_log(uploaded_file.name, uploaded_file.type, "User-Agent: " + st.request.headers.get('user-agent'))
         
         # File download options
         st.download_button("Download Table (.xls)", file_path)
