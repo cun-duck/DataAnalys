@@ -5,7 +5,7 @@ from data_preprocessing import preprocess_data
 from data_analysis import analyze_data
 from visualization import visualize_data
 from ai_training import train_ai_agent
-from logging_notification import send_upload_log, send_training_log
+from logging_notification import logging_notification
 import os
 
 st.title("Document Analysis and Visualization Application")
