@@ -9,13 +9,8 @@ from logging_notification import send_upload_log, send_training_log
 import os
 import time
 
-# Make sure temp_files directory exists
-if not os.path.exists("temp_files"):
-    os.makedirs("temp_files")
-
 st.title("Document Analysis and Visualization Application")
 
-# Upload section
 uploaded_file = st.file_uploader("Upload your .xls or .csv file", type=["xls", "csv"])
 if uploaded_file:
     # Check file size limit (8MB)
@@ -42,7 +37,7 @@ if uploaded_file:
         
         # AI Training
         st.write("Training AI Agent...")
-        train_ai_agent(data, log=True)  # Log set to True to log each training session
+        train_ai_agent(data, log=True)
         
         # Send training log to Telegram
         send_training_log(uploaded_file.name, status="completed")
@@ -56,15 +51,3 @@ if uploaded_file:
         
         # Save file path in session state for cleanup
         st.session_state["uploaded_file_path"] = file_path
-
-# Function to clean up file manually
-def cleanup_file():
-    file_path = st.session_state.get("uploaded_file_path")
-    if file_path and os.path.exists(file_path):
-        os.remove(file_path)
-        st.write(f"File {file_path} has been deleted.")
-        del st.session_state["uploaded_file_path"]
-
-# Cleanup after a certain period of inactivity or at the end of session
-if 'uploaded_file_path' in st.session_state:
-    st.experimental_rerun()  # Trigger rerun to call cleanup_file when the session is done
