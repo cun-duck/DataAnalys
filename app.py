@@ -7,6 +7,7 @@ from visualization import visualize_data
 from ai_training import train_ai_agent
 from logging_notification import send_upload_log, send_training_log
 import os
+import time
 
 # Make sure temp_files directory exists
 if not os.path.exists("temp_files"):
@@ -53,15 +54,17 @@ if uploaded_file:
         st.download_button("Download Table (.xls)", file_path)
         st.download_button("Download Visualization (.jpg)", "path_to_visualization.jpg")
         
-        # Schedule file for deletion
+        # Save file path in session state for cleanup
         st.session_state["uploaded_file_path"] = file_path
 
-# Clean up function for deleting file after session ends
+# Function to clean up file manually
 def cleanup_file():
     file_path = st.session_state.get("uploaded_file_path")
     if file_path and os.path.exists(file_path):
         os.remove(file_path)
+        st.write(f"File {file_path} has been deleted.")
+        del st.session_state["uploaded_file_path"]
 
-# Call cleanup function on session end
+# Cleanup after a certain period of inactivity or at the end of session
 if 'uploaded_file_path' in st.session_state:
-    st.on_session_close(cleanup_file)
+    st.experimental_rerun()  # Trigger rerun to call cleanup_file when the session is done
